@@ -1,0 +1,73 @@
+*{
+    margin:0;
+    padding:0;
+}
+body{
+    display: grid;
+    grid-template-columns: 1fr*12;
+    grid-template-rows: 1fr*12;
+    background-color: antiquewhite;
+}
+header{
+    grid-column: 1/12;
+    grid-row: 1/4;
+    display: grid;
+    grid-template-columns: 150px 80% 10%;
+    grid-template-rows: 100px 50px;
+    background-color: blueviolet;
+}
+main{
+    grid-column: 1/12;
+    grid-row: 4/9;
+}
+footer{
+    grid-column: 1/12;
+    grid-row: 9/12;
+}
+
+/*estilos para clases*/
+.logo {
+    grid-column: 1/2;
+    grid-row: 1/2;
+    width: 150px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+.logo img {
+
+    width: 150px;
+    height: auto;
+    object-fit: cover;
+}
+/*estilos del nuscador */
+.buscador{
+    grid-column: 2/3;
+    grid-row: 1/2;
+    display:flex;
+    align-items: center;
+    justify-content:center ;
+}
+.buscador input{
+    width: 700px;
+    height: 40px;
+}
+/**/
+nav{
+    grid-column: 2/4;
+    grid-row: 2/3;
+}
+nav ul{
+    display: flex;
+    list-style: none;
+}
+nav li{
+    margin: 20px;    
+}
+nav a{
+    text-decoration: none;
+    color: white;
+    font-family: verdana;
+
+}

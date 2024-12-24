@@ -1,0 +1,69 @@
+
+.form-1{
+    width: 400px;
+    min-height: 300px;
+    height: auto;
+    background-color: rgb(255, 255, 255);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    margin:20px auto;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    gap: 15px;
+    
+}
+.form-1 label{
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #000000;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.form-1 input[type="text"],
+.form-1 input[type="email"],
+.form-1 input[type="password"],
+.form-1 input[type="number"],
+.form-1 select,
+.form-1 textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    box-sizing: border-box; 
+    margin-bottom: 15px;
+}
+/*boton continuar*/
+.continuar-btn {
+    width: 100%;
+    max-width: 250px; /* Ancho máximo para que no se expanda demasiado */
+    padding: 12px;
+    font-size: 18px;
+    background-color:blueviolet; /* Color verde de fondo */
+    color: white;
+    border: none;
+    border-radius: 30px; /* Bordes redondeados */
+    cursor: pointer;
+    text-align: center;
+    display: block; /* Centra el botón en su contenedor */
+    margin: 20px auto; /* Márgenes automáticos para centrar el botón */
+    transition: background-color 0.3s, transform 0.2s; /* Suaviza la transición */
+}
+
+.continuar-btn:hover {
+    background-color:blueviolet; 
+    transform: scale(1.05); 
+}
+
+.continuar-btn:focus {
+    outline: none; 
+    box-shadow: 0 0 10px rgba(125, 72, 175, 0.6); 
+}
+
+.continuar-btn:active {
+    background-color:rgb(27, 11, 43);
+    transform: scale(0.98); 
+}
