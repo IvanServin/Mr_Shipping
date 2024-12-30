@@ -1,18 +1,32 @@
 <?php
-include_once __DIR__.'/../conxion/conexion.php';
-conectar();
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+echo($_SESSION['id_usuario']);
+include_once __DIR__ . '/../conexion/conexion.php';
+$con = conectar();
+if ($con->connect_error) {
+    die("Error de conexión: " . $con->connect_error);
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $categoria =  $_POST['categoria'];
     $nombre = $_POST['nombre_producto'];
     $precio = $_POST['precio_producto'];
     $estado =  $_POST['estado'];
+    $estado_venta = 'Activo';// por default se pongo en activo 
+    $stock = $_POST['stock'];
     $descripcion = $_POST['descripcion_producto'];
+    $idusuario = $_SESSION['id_usuario'];
+    $categoria =  $_POST['categoria'];
+
+
+    
 
     // Procesar las imágenes
     $imagenes = $_FILES['img_producto'];
-    
+
     // Definir los tipos permitidos y el tamaño máximo
-    $allowed_types = ['image/jpeg', 'image/png'];
+    $allowed_types = ['image/jpeg', 'image/png','image/webp'];
     $max_size = 2 * 1024 * 1024; // 2 MB
     $imagenes_guardadas = [];  // Array para guardar las rutas de las imágenes
 
@@ -50,11 +64,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $imagenes_rutas = implode(',', $imagenes_guardadas);
 
     // Insertar el producto en la base de datos
-    $sql = "INSERT INTO productos (nombre, precio, estado, descripcion, dir_img, id_usuario) 
-            VALUES (?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO productos (nombre_producto, precio, estado_condicion,estado_venta, stock, descripcion,fecha_publicacion, dir_img, id_usuario,id_categoria) 
+            VALUES (?, ?, ?, ?, ?, ?, CURDATE(), ?, ?, ?)";
     $stmt = $con->prepare($sql);
-    $stmt->bind_param("sssssi", $nombre, $precio, $estado, $descripcion, $imagenes_rutas, $_SESSION['usuario_id']);
-    
+    $stmt->bind_param("sssssssss", $nombre, $precio, $estado,$estado_venta, $stock, $descripcion, $imagenes_rutas, $idusuario,$categoria);
+
     if ($stmt->execute()) {
         echo "Producto y sus imágenes guardados con éxito.<br>";
     } else {
@@ -66,9 +80,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <link rel="stylesheet" href="../estilos/estilos_pd.css">
 <form class="form-1" action="index.php?modulo=cargar_productos" method="POST" enctype="multipart/form-data">
     <label for="categoria">Seleccione la categoría de su producto</label>
-    <select name="categoria" id="categoria">
-        <option value="">Seleccione una categoría</option>
-        <option value="ropa">Ropa</option>
+    <select name='categoria' id='categoria'>
+        <?php
+        $sql = "SELECT id_categoria,nombre_categoria FROM categorias";
+        $categorias = $con->query($sql);
+        if ($categorias->num_rows > 0) {
+            while ($fila = $categorias->fetch_assoc()) {
+                echo "<option value='" . $fila['id_categoria'] . "'>" . htmlspecialchars($fila['nombre_categoria']) . "</option>";
+            }
+        } else {
+            echo "<option value=''>No hay categoraís disponibles</option>";
+        }
+        ?>
     </select>
 
     <label for="nombre_producto">Nombre del producto</label>
@@ -76,6 +99,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <label for="precio">Precio de su producto</label>
     <input type="number" name="precio_producto" id="precio">
+
+    <lavebel for="stock">cuantas unidades posee (stock)</lavebel>
+    <input type="number" name="stock" id="stock">
 
     <select name="estado" id="estado">
         <option value="">Seleccione el estado del producto</option>

@@ -1,6 +1,6 @@
 <?php
 session_start();
-include_once __DIR__. '/conexion/conexion.php';
+include_once __DIR__ . '/conexion/conexion.php';
 conectar();
 
 ?>
@@ -19,13 +19,16 @@ conectar();
 
 <body>
     <?php
-    include('php/header.php');
+    $modulo = isset($_GET['modulo']) ? $_GET['modulo'] : '';
+    if ($modulo !== 'perfil') {  // Usar $modulo en la condición
+        include('php/header.php');
+    }
     ?>
     <main>
         <?php
-        if (!empty($_GET['modulo'])) {
-            $pagina = addslashes($_GET['modulo']);
-            include ('php/'.$pagina.'.php');
+        if (!empty($modulo)) {  // Usar $modulo en la condición
+            $pagina = addslashes($modulo);
+            include('php/' . $pagina . '.php');
         } else {
             include('php/mostrar_productos.php');
         }
@@ -33,7 +36,10 @@ conectar();
     </main>
 
     <?php
-    include('php/footer.php');
+    if($modulo !== 'perfil'){
+        include('php/footer.php');
+    }
+
     ?>
 
 </body>

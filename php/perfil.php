@@ -14,20 +14,25 @@ if (!isset($_SESSION['id_usuario'])) {
 ?>
 <?php
 //carga de visitantes 
-function getperfil($idperfil){
+function getperfil($idusuario)
+{
   global $con;
-  $stmt = $con->prepare ("SELECT * FROM perfil WHERE id_perfil = ?");
-  $stmt->excute([$idperfil]);
-  return $stmt->fech(PDO::FETCH_ASSOC);
+  $sql = ("SELECT * FROM perfil WHERE id_usuario = ?");
+  $stmt = $con->prepare($sql);
+  $stmt->bind_param("s", $idusuario);
+  $stmt->execute();
+  $result = $stmt->get_result();
+  return $result->fetch_assoc();
 }
 
-if(isset($_GET['id_perfil'])){
-  $idperfil = $_GET['id_perfil'];
-  $perfil = getperfil($idperfil);
-}else{
-  $idperfil = $_SESSION['id_perfil'];
-  $perfil = getperfil($idperfil);
+if (isset($_GET['id_usuario'])) {
+  $idusuario = $_GET['id_usuario'];
+  $perfil = getperfil($idusuario);
+} else {
+  $idusuario = $_SESSION['id_usuario'];
+  $perfil = getperfil($idusuario);
 }
+$rt_foto_perfil = $perfil['foto_perfil'];
 ?>
 
 
@@ -35,32 +40,36 @@ if(isset($_GET['id_perfil'])){
 <div class="cabecera"><!-- contenedor para la cabecera del perfil -->
   <div class="cont_img"><!-- contenedor de la imagen perfil -->
     <?php
-     $sql = $con->prepare("SELECT foto_perfil FROM perfil WHERE id_perfil = ?" ); 
+    echo ("<img src='./img/{$rt_foto_perfil}' alt='foto perfil'>")
     ?>
   </div>
-  <div class="cont_name">
-    <?php
-    if (isset($_SESSION['nombre_us'])) {
-      echo "<h3>{$_SESSION['nombre_us']}</h3>";
-    } else {
-      echo "<h3>User</h3>";
-    }
-    ?>
+  <div class="datos_us">
+    <div class="cont_name">
+      <?php
+      if (isset($_SESSION['nombre_us'])) {
+        echo "<h3>{$_SESSION['nombre_us']}</h3>";
+      } else {
+        echo "<h3>User</h3>";
+      }
+      ?>
+    </div>
+    <div class="cont_descripcion">
+      <?php
+      if (isset($_SESSION['descripcion'])) {
+        echo "<p>" . nl2br(htmlspecialchars($_SESSION['descripcion'], ENT_QUOTES, 'UTF-8')) . "</p>";
+      } else {
+        echo "<p>Agrega info para que la gente sepa más de ti</p>";
+      }
+      ?>
+    </div>
+
   </div>
-  <div class="cont_descripcion">
-    <?php
-    if (isset($_SESSION['descripcion'])) {
-      echo "<p>" . nl2br(htmlspecialchars($_SESSION['descripcion'], ENT_QUOTES, 'UTF-8')) . "</p>";
-    } else {
-      echo "<p>Agrega info para que la gente sepa más de ti</p>";
-    }
-    ?>
-  </div>
+
 </div>
 
 <nav class="cont_nav_perfil">
   <ul>
-    <li><a href="index.php?modulo=perfil.php">Mi Perfil</a></li>
+    <li><a href="index.php?modulo=perfil">Mi Perfil</a></li>
     <li><a href="index.php?modulo=cargar_productos">Publicar producto</a></li>
     <li><a href="./index.php">Inicio</a></li>
     <div class="box-confi">
@@ -72,8 +81,6 @@ if(isset($_GET['id_perfil'])){
           <button type="submit" class="btn-cerrar-sesion">Cerrar Sesión</button>
         </form>
       </div>
-
-
     </div>
 
   </ul>
@@ -106,11 +113,11 @@ if(isset($_GET['id_perfil'])){
 
           echo "
                     <div class='tarjeta'>
-                        <img src='../img/{$imagen_destino}' alt='{$producto['nombre_producto']}'>
+                        <img src='./img/{$imagen_destino}' alt='{$producto['nombre_producto']}'>
                         <div class='contenido'>
                             <h3>{$producto['nombre_producto']}</h3>
                             <p>{$producto['descripcion']}</p>
-                            <span class='precio'>$ {$producto['precio']}</span>
+                            <span class='precio'>$ {$producto['precio']}</span><br>
                             <a href='#' class='btn'>Comprar ahora</a>
                         </div>
                     </div>
@@ -132,7 +139,7 @@ if(isset($_GET['id_perfil'])){
     session_destroy(); // Destruye la sesión
     header('Location:/programas/TuShop/index.php'); // Redirige al login u otra página
     exit;
-  } 
+  }
   ?>
 
 </div>

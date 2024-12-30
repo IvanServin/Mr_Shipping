@@ -1,18 +1,20 @@
 <?php
-if(session_status()== PHP_SESSION_NONE){
+if(session_status() == PHP_SESSION_NONE){
   session_start();
 }
 include_once __DIR__.'/../conexion/conexion.php';
 $con = conectar();
+
 if (isset($_SESSION['id_usuario'])) {
-  header('Location:index.php?modulo=perfil');
+  // Redirige a la ruta correcta
+  header('Location: ../index.php?modulo=perfil'); // Usamos la ruta relativa aquí
   exit;
 } else {
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre_us = mysqli_real_escape_string($con, $_POST['nombre']);
     $pass = $_POST['pass'];
 
-    $sql = "SELECT id_usuario, contrasena ,nombre_usuario, descripcion,correo,id_perfil FROM usuarios WHERE nombre_usuario = ?";
+    $sql = "SELECT id_usuario, contrasena, nombre_usuario, descripcion, correo FROM usuarios WHERE nombre_usuario = ?";
     $stmt = $con->prepare($sql);
     $stmt->bind_param("s", $nombre_us);
     $stmt->execute();
@@ -27,7 +29,8 @@ if (isset($_SESSION['id_usuario'])) {
         $_SESSION['descripcion'] = $row['descripcion'];
         $_SESSION['correo'] = $row['correo'];
         $_SESSION['id_perfil'] = $row['id_perfil'];
-        header('Location:perfil.php');
+        // Redirige a la ruta correcta
+        header('Location: ../index.php?modulo=perfil'); // Usamos la ruta relativa aquí
         exit;
       } else {
         echo "Contraseña incorrecta"; // Muestra mensaje de error
@@ -46,5 +49,5 @@ if (isset($_SESSION['id_usuario'])) {
   <label for="pass">Contraseña</label>
   <input type="password" name="pass" id="pass">
   <button class="continuar-btn" type="submit">Continuar</button>
-  <a href="index.php?modulo=registrar_us">Registrarme</a>
+  <a href="../index.php?modulo=registrar_us">Registrarme</a>
 </form>
