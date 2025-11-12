@@ -1,73 +1,537 @@
-*{
-    margin:0;
-    padding:0;
-}
-body{
-    display: grid;
-    grid-template-columns: 1fr*12;
-    grid-template-rows: 1fr*12;
-    background-color: antiquewhite;
-}
-header{
-    grid-column: 1/12;
-    grid-row: 1/4;
-    display: grid;
-    grid-template-columns: 150px 80% 10%;
-    grid-template-rows: 100px 50px;
-    background-color: blueviolet;
-}
-main{
-    grid-column: 1/12;
-    grid-row: 4/9;
-}
-footer{
-    grid-column: 1/12;
-    grid-row: 9/12;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/*estilos para clases*/
-.logo {
-    grid-column: 1/2;
-    grid-row: 1/2;
-    width: 150px;
-    height: 100px;
-    display: flex;
-    justify-content: center;
+html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    position: relative;
+}
+
+body {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: auto 1fr auto;
+    background-color: #fff;
+    min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* HEADER */
+header {
+    grid-column: 1 / -1;
+    grid-row: 1 / 2;
+    display: grid;
+    grid-template-columns: 150px 1fr auto;
+    grid-template-rows: 80px;
+    background-color: blueviolet;
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    align-items: center;
+    overflow: hidden;
+}
+
+main {
+    grid-column: 1 / -1;
+    grid-row: 2 / 3;
+    width: 100%;
+    max-width: 100%;
+    /*padding: 20px;*/
+    overflow-x: hidden;
+}
+
+footer {
+    grid-column: 1 / -1;
+    grid-row: 3 / 4;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    background-color: #f5f5f5;
+    padding: 20px;
     text-align: center;
 }
-.logo img {
 
-    width: 150px;
-    height: auto;
-    object-fit: cover;
-}
-/*estilos del nuscador */
-.buscador{
-    grid-column: 2/3;
-    grid-row: 1/2;
-    display:flex;
+/* LOGO */
+.logo {
+    grid-column: 1 / 2;
+    display: flex;
+    justify-content: center;
     align-items: center;
-    justify-content:center ;
+    width: 100%;
+    padding-left: 20px;
+    max-width: 150px;
 }
-.buscador input{
-    width: 700px;
-    height: 40px;
+
+.logo img {
+    width: 120px;
+    height: auto;
+    object-fit: contain;
+    max-width: 100%;
 }
-/**/
-nav{
-    grid-column: 2/4;
-    grid-row: 2/3;
+
+/* BUSCADOR */
+.buscador {
+    grid-column: 2 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 100%;
+    padding: 0 20px;
+    overflow: hidden;
 }
-nav ul{
+
+.buscador form {
+    display: flex;
+    gap: 10px;
+    background: white;
+    padding: 8px 15px;
+    border-radius: 25px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 600px;
+}
+
+.buscador form:focus-within {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.buscador input[type="text"] {
+    flex: 1;
+    height: 35px;
+    padding: 0 15px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    border-radius: 20px;
+    font-family: 'Segoe UI', sans-serif;
+    background: transparent;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.buscador input[type="text"]::placeholder {
+    color: #999;
+}
+
+.buscador input[type="text"]:focus {
+    background-color: #f8f9fa;
+}
+
+.buscador button {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    background: linear-gradient(45deg, #7e42e9, #bf5de9);
+    color: white;
+    font-family: 'Segoe UI', sans-serif;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    max-width: 100%;
+}
+
+.buscador button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(127, 66, 233, 0.4);
+}
+
+.buscador button:active {
+    transform: scale(0.98);
+}
+
+/* NAVEGACIÓN */
+nav {
+    grid-column: 3 / 4;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 20px;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+nav ul {
     display: flex;
     list-style: none;
+    gap: 15px;
+    margin: 0;
+    padding: 0;
+    flex-wrap: wrap;
+    max-width: 100%;
 }
-nav li{
-    margin: 20px;    
+
+nav li {
+    margin: 0;
 }
-nav a{
+
+nav a {
     text-decoration: none;
     color: white;
-    font-family: verdana;
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    font-size: 14px;
+    display: inline-block;
+    max-width: 100%;
+}
 
+nav a:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* CONTENEDOR DE PRODUCTOS */
+.cont_productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0;
+    overflow: hidden;
+    align-items: stretch;
+}
+
+/* TARJETAS DE PRODUCTOS - TAMAÑO UNIFORME */
+.tarjeta {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* misma altura */
+    border: 1px solid #eaeaea;
+    /* Altura fija*/
+    min-height: 420px;
+}
+
+.tarjeta:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+/* CONTENEDOR DE IMAGEN CON ALTURA FIJA */
+.tarjeta .img-container {
+    width: 100%;
+    height: 200px; /* Altura fija para todas las imágenes */
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f8f8;
+}
+
+.tarjeta img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Asegura que la imagen cubra el contenedor sin distorsionarse */
+    max-width: 100%;
+    display: block;
+}
+
+.tarjeta .contenido {
+    padding: 20px;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* TÍTULO*/
+.tarjeta h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+    line-height: 1.3;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    /* Altura fija para títulos */
+    height: 2.6em; /* Aproximadamente 2 líneas */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+/* DESCRIPCIÓN*/
+.tarjeta .descripcion-corta {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 15px;
+    line-height: 1.4;
+    flex-grow: 1;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    /* Altura fija para descripciones */
+    height: 4.2em; /* Aproximadamente 3 líneas */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+/* PRECIO */
+.tarjeta .precio {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #2ecc71;
+    margin-bottom: 15px;
+    display: block;
+    /* Altura fija para precios */
+    height: 1.4em;
+    overflow: hidden;
+}
+
+/* REGLAS PARA ELIMINAR SCROLL HORIZONTAL */
+.container, .wrapper, .content {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+}
+
+img, video, iframe, table {
+    max-width: 100% !important;
+    height: auto !important;
+}
+
+/* REGLAS ESPECÍFICAS PARA PREVENIR SCROLL HORIZONTAL */
+body, html {
+    overflow-x: hidden !important;
+    position: relative;
+}
+
+main, header, footer, section, div {
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+    header {
+        grid-template-columns: 120px 1fr auto;
+        grid-template-rows: auto;
+        gap: 10px;
+        padding: 10px;
+    }
+    
+    .logo {
+        max-width: 120px;
+        padding-left: 10px;
+    }
+    
+    .logo img {
+        width: 100px;
+    }
+    
+    nav ul {
+        gap: 10px;
+    }
+    
+    nav a {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+    
+    .buscador {
+        padding: 0 10px;
+    }
+    
+    .cont_productos {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+    }
+    
+    .tarjeta {
+        min-height: 400px;
+    }
+    
+    .tarjeta .img-container {
+        height: 180px;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        grid-template-rows: auto 1fr auto;
+        padding: 0;
+    }
+    
+    header {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        gap: 10px;
+        padding: 10px;
+    }
+    
+    .logo {
+        grid-column: 1 / -1;
+        justify-content: center;
+        padding: 0;
+        max-width: 100%;
+    }
+    
+    .buscador {
+        grid-column: 1 / -1;
+        order: 2;
+        padding: 0 10px;
+    }
+    
+    nav {
+        grid-column: 1 / -1;
+        order: 3;
+        justify-content: center;
+        padding: 10px 0 0 0;
+        max-width: 100%;
+    }
+    
+    nav ul {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .cont_productos {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 15px;
+        padding: 0 10px;
+    }
+    
+    main {
+        padding: 10px;
+    }
+    
+    .tarjeta .contenido {
+        padding: 15px;
+    }
+    
+    .tarjeta h3 {
+        font-size: 1.1rem;
+        height: 2.4em;
+    }
+    
+    .tarjeta .precio {
+        font-size: 1.3rem;
+    }
+    
+    .tarjeta {
+        min-height: 380px;
+    }
+    
+    .tarjeta .img-container {
+        height: 160px;
+    }
+}
+
+@media (max-width: 480px) {
+    .cont_productos {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 0 5px;
+    }
+    
+    .buscador form {
+        flex-direction: column;
+        gap: 5px;
+        padding: 10px;
+        max-width: 100%;
+    }
+    
+    .buscador input[type="text"] {
+        border-radius: 10px;
+        margin-bottom: 5px;
+        width: 100%;
+    }
+    
+    .buscador button {
+        border-radius: 10px;
+        padding: 10px;
+        width: 100%;
+    }
+    
+    nav ul {
+        gap: 8px;
+        justify-content: space-around;
+        width: 100%;
+    }
+    
+    nav a {
+        padding: 6px 10px;
+        font-size: 12px;
+        text-align: center;
+    }
+    
+    .logo img {
+        width: 80px;
+    }
+    
+    .tarjeta .img-container {
+        height: 150px;
+    }
+    
+    .tarjeta {
+        min-height: 360px;
+    }
+    
+    .tarjeta h3 {
+        font-size: 1rem;
+        height: 2.2em;
+    }
+    
+    .tarjeta .descripcion-corta {
+        height: 3.8em;
+    }
+    
+    .tarjeta .btn {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+        height: 40px;
+    }
+}
+
+/* REGLA EXTRA PARA DISPOSITIVOS MUY PEQUEÑOS */
+@media (max-width: 320px) {
+    nav ul {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    nav li {
+        margin-bottom: 5px;
+    }
+    
+    .tarjeta .contenido {
+        padding: 12px;
+    }
+    
+    .tarjeta h3 {
+        font-size: 0.95rem;
+    }
+    
+    .tarjeta .precio {
+        font-size: 1.2rem;
+    }
+    
+    .tarjeta .btn {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+        height: 38px;
+    }
 }

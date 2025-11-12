@@ -1,0 +1,333 @@
+/* Estilos Mercado Libre para página de producto */
+.pagina-producto {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+}
+
+/* Ruta de navegación (breadcrumb) */
+.ruta-navegacion {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.ruta-navegacion a {
+    color: #3483fa;
+    text-decoration: none;
+}
+
+.ruta-navegacion a:hover {
+    text-decoration: underline;
+}
+
+/* Contenedor principal del producto */
+.producto-detalle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+/* Sección de imágenes */
+.galeria-producto {
+    position: relative;
+}
+
+.imagen-principal {
+    width: 100%;
+    max-width: 500px;
+    height: 500px;
+    object-fit: contain;
+    border: 1px solid #e6e6e6;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.miniaturas {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.miniatura {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.miniatura:hover,
+.miniatura.activa {
+    border-color: #3483fa;
+}
+
+/* Sección de información */
+.info-producto {
+    padding: 20px 0;
+}
+
+.estado-producto {
+    font-size: 14px;
+    color: #00a650;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.titulo-producto {
+    font-size: 22px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+    line-height: 1.3;
+}
+
+.precio-producto {
+    margin-bottom: 20px;
+}
+
+.precio-actual {
+    font-size: 36px;
+    font-weight: 300;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.precio-descuento {
+    font-size: 18px;
+    color: #00a650;
+    font-weight: 500;
+}
+
+.envio-gratis {
+    color: #00a650;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.envio-gratis i {
+    margin-right: 5px;
+}
+
+/* Botones de compra */
+.botones-compra {
+    margin-bottom: 30px;
+}
+
+.btn-comprar-ahora {
+    background-color: #3483fa;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 0;
+    font-size: 16px;
+    font-weight: 600;
+    width: 100%;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-comprar-ahora:hover {
+    background-color: #2968c8;
+}
+
+.btn-agregar-carrito {
+    background-color: rgba(65, 137, 230, 0.15);
+    color: #3483fa;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 0;
+    font-size: 16px;
+    font-weight: 600;
+    width: 100%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-agregar-carrito:hover {
+    background-color: rgba(65, 137, 230, 0.25);
+}
+
+/* Información de envío */
+.info-envio {
+    border: 1px solid #e6e6e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.titulo-seccion {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.direccion-envio {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.direccion-envio i {
+    color: #00a650;
+    font-size: 16px;
+}
+
+.cambiar-direccion {
+    color: #3483fa;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.costo-envio {
+    color: #00a650;
+    font-weight: 500;
+    margin: 10px 0;
+}
+
+.fecha-entrega {
+    color: #666;
+    font-size: 14px;
+}
+
+/* Garantías y seguridad */
+.garantias {
+    border: 1px solid #e6e6e6;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.item-garantia {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.item-garantia:last-child {
+    margin-bottom: 0;
+}
+
+.item-garantia i {
+    color: #00a650;
+    font-size: 16px;
+}
+
+.texto-garantia {
+    font-size: 14px;
+    color: #333;
+}
+
+/* Descripción del producto */
+.seccion-descripcion {
+    margin-top: 40px;
+    border-top: 1px solid #e6e6e6;
+    padding-top: 30px;
+}
+
+.descripcion-texto {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #666;
+    white-space: pre-line;
+}
+
+/* Características */
+.caracteristicas {
+    margin-top: 20px;
+}
+
+.caracteristica {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.caracteristica-titulo {
+    font-weight: 600;
+    color: #666;
+    min-width: 150px;
+}
+
+.caracteristica-valor {
+    color: #333;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .pagina-producto {
+        padding: 10px;
+    }
+    
+    .producto-detalle {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .imagen-principal {
+        height: 300px;
+    }
+    
+    .titulo-producto {
+        font-size: 18px;
+    }
+    
+    .precio-actual {
+        font-size: 28px;
+    }
+    
+    .caracteristica {
+        flex-direction: column;
+    }
+    
+    .caracteristica-titulo {
+        min-width: auto;
+        margin-bottom: 5px;
+    }
+}
+
+/* Efectos hover para interacciones */
+.miniatura:hover {
+    transform: scale(1.05);
+}
+
+.btn-comprar-ahora:active,
+.btn-agregar-carrito:active {
+    transform: scale(0.98);
+}
+
+/* Stock disponible */
+.stock-disponible {
+    color: #00a650;
+    font-size: 14px;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+/* Cantidad */
+.selector-cantidad {
+    margin-bottom: 20px;
+}
+
+.selector-cantidad label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+}
+
+.selector-cantidad select {
+    padding: 8px 12px;
+    border: 1px solid #e6e6e6;
+    border-radius: 4px;
+    font-size: 14px;
+}

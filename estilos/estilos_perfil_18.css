@@ -1,0 +1,263 @@
+/* === ESTILOS PERFIL === */
+
+/* CONTENEDOR PRINCIPAL */
+.perfil-container {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* PORTADA */
+.foto-portada {
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    background: linear-gradient(45deg, #ff6b6b, #ffd93d, #6bcf7f, #4d96ff);
+    background-size: 400% 400%;
+    animation: gradientShift 8s ease infinite;
+    border-bottom: none;
+    position: relative;
+    margin-bottom: 80px;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.foto-portada img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.9;
+}
+
+/* CABECERA */
+.cabecera {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 2rem 2rem 2rem;
+    border-bottom: none;
+    justify-content: flex-start;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    margin-top: -80px;
+}
+
+.cont_img {
+    flex-shrink: 0;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid #ffffff;
+    background: linear-gradient(45deg, #ff6b6b, #4d96ff);
+    position: relative;
+    left: 0;
+    transform: none;
+    top: 0;
+    z-index: 20;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    margin-right: 2rem;
+}
+
+.cont_img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.3);
+}
+
+.cont_img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.datos_us {
+    margin-left: 0;
+    flex: 1;
+    text-align: left;
+    margin-top: 0;
+}
+
+.cont_name h3 {
+    font-size: 2rem;
+    background: linear-gradient(45deg, #ff6b6b, #4d96ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0 0 1rem 0;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.cont_descripcion p {
+    font-size: 1.2rem;
+    color: #555;
+    margin: 0;
+    line-height: 1.6;
+    font-weight: 500;
+}
+
+/* NAVEGACIÓN */
+.cont_nav_perfil {
+    background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,245,250,0.95) 100%);
+    backdrop-filter: blur(10px);
+    padding: 1.5rem 2rem;
+    border-bottom: none;
+    position: relative;
+    overflow: visible;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+}
+
+.nav-lista {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0;
+    margin: 0;
+    flex-wrap: wrap;
+}
+
+.nav-lista li {
+    position: relative;
+}
+
+.nav-lista a {
+    text-decoration: none;
+    font-size: 1.1rem;
+    color: #333;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    display: inline-block;
+    white-space: nowrap;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.nav-lista a:hover {
+    background: linear-gradient(135deg, #764ba2, #667eea);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+/* MENÚ CONFIGURACIÓN - SOLUCIÓN DEFINITIVA */
+.menu-config {
+    position: relative;
+    display: inline-block;
+}
+
+.menu-trigger {
+    text-decoration: none;
+    font-size: 1.1rem;
+    color: white;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, #ff6b6b, #ffa726);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-block;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.menu-trigger:hover {
+    background: linear-gradient(135deg, #ffa726, #ff6b6b);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+}
+
+.menu-desplegable {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 182, 193, 0.5);
+    border-radius: 12px;
+    padding: 0.8rem;
+    min-width: 200px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    z-index: 1000;
+    margin-top: 0.8rem;
+}
+
+.menu-desplegable.mostrar {
+    display: block;
+}
+
+.menu-desplegable button {
+    width: 100%;
+    padding: 1rem 1.2rem;
+    margin: 0.3rem 0;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    text-align: left;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.menu-desplegable button:hover {
+    background: linear-gradient(135deg, #764ba2, #667eea);
+    transform: translateX(5px);
+    color: white;
+}
+
+.menu-desplegable form {
+    margin: 0;
+}
+
+/* PRODUCTOS - ESTILO PINTEREST */
+.cont_productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    padding: 3rem;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    align-items: start;
+}
+
+.perfil_tarjeta {
+    background: white;
+    border-radius: 20px;
+    overflow: visible;
+    transition: all 0.4s ease;
+    break-inside: avoid;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    border: none;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 400px;
+}
+
+.perfil_tarjeta::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(45deg, #ff6b6b, #4d96ff);
+}
+
+.perfil_tarjeta:hover {
+    transform: translateY(-12px) scale(1.02);

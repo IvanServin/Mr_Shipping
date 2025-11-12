@@ -7,14 +7,14 @@ $con = conectar();
 
 if (isset($_SESSION['id_usuario'])) {
   // Redirige a la ruta correcta
-  header('Location: ../index.php?modulo=perfil'); // Usamos la ruta relativa aquí
+  header('Location: ../index.php?modulo=perfil'); 
   exit;
 } else {
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre_us = mysqli_real_escape_string($con, $_POST['nombre']);
     $pass = $_POST['pass'];
 
-    $sql = "SELECT id_usuario, contrasena, nombre_usuario, descripcion, correo FROM usuarios WHERE nombre_usuario = ?";
+    $sql = "SELECT id_usuario, contrasena, nombre, descripcion, correo FROM usuarios WHERE nombre_usuario = ?";
     $stmt = $con->prepare($sql);
     $stmt->bind_param("s", $nombre_us);
     $stmt->execute();
@@ -28,12 +28,12 @@ if (isset($_SESSION['id_usuario'])) {
         $_SESSION['nombre_us'] = $row['nombre_usuario'];
         $_SESSION['descripcion'] = $row['descripcion'];
         $_SESSION['correo'] = $row['correo'];
-        $_SESSION['id_perfil'] = $row['id_perfil'];
+       // $_SESSION['id_perfil'] = $row['id_perfil'];
         // Redirige a la ruta correcta
-        header('Location: ../index.php?modulo=perfil'); // Usamos la ruta relativa aquí
+        header('Location: index.php?modulo=perfil'); 
         exit;
       } else {
-        echo "Contraseña incorrecta"; // Muestra mensaje de error
+        echo "Contraseña incorrecta"; 
       }
     } else {
       echo "Usuario no encontrado";
@@ -43,7 +43,7 @@ if (isset($_SESSION['id_usuario'])) {
 ?>
 <link rel="stylesheet" href="../estilos/estilos_pd.css">
 
-<form class="form-1" action="php/inicio_session.php" method="POST">
+<form class="form-1" action="" method="POST">
   <label for="nombre">Nombre de usuario</label>
   <input type="text" id="nombre" name="nombre">
   <label for="pass">Contraseña</label>
