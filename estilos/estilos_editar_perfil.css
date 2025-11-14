@@ -1,11 +1,13 @@
-/* ESTILOS EDITOR PERFIL - SIMPLIFICADO */
+/* ESTILOS EDITOR PERFIL - CON MENÚ LATERAL */
 .editor-perfil {
-    max-width: 700px;
+    display: flex;
+    max-width: 1200px;
     margin: 30px auto;
     background: white;
     border-radius: 12px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     overflow: hidden;
+    min-height: 600px;
 }
 
 .editor-perfil h2 {
@@ -15,27 +17,34 @@
     color: #333;
 }
 
-/* TABS HEADER */
+/* MENÚ LATERAL */
+.menu-lateral {
+    flex: 0 0 280px;
+    background: #f8f9fa;
+    border-right: 1px solid #e0e0e0;
+    padding: 20px 0;
+}
+
 .tabs-header {
     display: flex;
-    background: #f8f9fa;
-    border-bottom: 1px solid #e0e0e0;
-    padding: 0 25px;
+    flex-direction: column;
+    gap: 5px;
 }
 
 .tab-header {
-    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
     padding: 15px 20px;
     border: none;
     background: none;
     cursor: pointer;
     font-size: 14px;
-    color: #666;
-    border-bottom: 2px solid transparent;
+    color: #555;
+    border-left: 4px solid transparent;
     transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    text-align: left;
+    width: 100%;
 }
 
 .tab-header:hover {
@@ -45,19 +54,38 @@
 
 .tab-header.active {
     color: #007AFF;
-    border-bottom-color: #007AFF;
+    border-left-color: #007AFF;
     background: white;
     font-weight: 500;
 }
 
 .tab-header span {
-    font-size: 16px;
+    font-size: 18px;
+    width: 24px;
+    text-align: center;
 }
 
-/* PANELS */
+.tab-header .badge {
+    background: #ff6b6b;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-left: auto;
+}
+
+/* CONTENIDO PRINCIPAL */
+.contenido-principal {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
 .tab-panel {
     display: none;
-    padding: 0;
+    flex: 1;
+    overflow-y: auto;
 }
 
 .tab-panel.active {
@@ -65,7 +93,7 @@
 }
 
 .panel-content {
-    padding: 25px;
+    padding: 30px;
 }
 
 .panel-content h3 {
@@ -80,13 +108,20 @@
     margin: 0 0 20px 0;
 }
 
-/* SECCIÓN DE IMÁGENES */
+/* SECCIÓN DE IMÁGENES - APILADA VERTICALMENTE */
 .imagen-section {
     display: flex;
+    flex-direction: column;
     gap: 20px;
-    align-items: center;
-    justify-content: center;
     margin: 20px 0;
+}
+
+.imagen-row {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 .imagen-side {
@@ -95,8 +130,8 @@
 }
 
 .upload-section {
-    flex: 1;
-    max-width: 200px;
+    max-width: 100%;
+    width: 100%;
 }
 
 .current-image img,
@@ -195,6 +230,7 @@ textarea {
     padding: 20px 25px;
     border-top: 1px solid #e0e0e0;
     background: #f8f9fa;
+    margin-top: auto;
 }
 
 .continuar-btn {
@@ -234,20 +270,274 @@ textarea {
     border: 1px solid #f5c6cb;
 }
 
+/* Estilos para la sección de plantillas */
+.plantillas-actions {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.btn-crear {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.btn-crear:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.no-plantillas {
+    text-align: center;
+    padding: 3rem 2rem;
+}
+
+.empty-state span {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.empty-state h4 {
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+.btn-primary {
+    background: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.plantillas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.plantilla-card {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.plantilla-card.activa {
+    border-color: #4CAF50;
+    background: linear-gradient(135deg, #f8fff8 0%, #e8f5e8 100%);
+}
+
+.plantilla-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.plantilla-header {
+    display: flex;
+    justify-content: between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.plantilla-header h4 {
+    margin: 0;
+    color: #333;
+    flex: 1;
+}
+
+.badge-activa {
+    background: #4CAF50;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.plantilla-info {
+    margin-bottom: 1rem;
+}
+
+.info-item {
+    margin-bottom: 0.5rem;
+}
+
+.info-item strong {
+    color: #555;
+}
+
+.info-item p {
+    margin: 0.25rem 0 0 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.plantilla-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.btn-usar {
+    background: #2196F3;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.btn-usar:hover {
+    background: #1976D2;
+    transform: translateY(-1px);
+}
+
+.btn-actual {
+    background: #4CAF50;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.btn-eliminar {
+    background: #f44336;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.btn-eliminar:hover {
+    background: #d32f2f;
+    transform: translateY(-1px);
+}
+
+.plantillas-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    margin-top: 1rem;
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat strong {
+    color: #333;
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+/* Estilos para el formulario */
+.form-2 {
+    width: 100%;
+    min-height: 320px;
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 25px 30px;
+    margin: 30px auto;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    gap: 15px;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.form-2 h2 {
+    color: #4b0082;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.form-2 label {
+    text-align: left;
+    font-size: 14px;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 4px;
+}
+
+.form-2 input[type="text"],
+.form-2 input[type="email"],
+.form-2 input[type="password"],
+.form-2 input[type="number"],
+.form-2 select,
+.form-2 textarea {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    transition: border 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
+.form-2 input:focus,
+.form-2 select:focus,
+.form-2 textarea:focus {
+    border-color: blueviolet;
+    box-shadow: 0 0 5px rgba(138, 43, 226, 0.3);
+}
+
 /* RESPONSIVE */
 @media (max-width: 768px) {
     .editor-perfil {
+        flex-direction: column;
         margin: 15px;
         border-radius: 8px;
     }
     
+    .menu-lateral {
+        flex: 0 0 auto;
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    
     .tabs-header {
+        flex-direction: row;
+        overflow-x: auto;
         padding: 0 15px;
     }
     
     .tab-header {
-        padding: 12px 10px;
+        flex: 0 0 auto;
+        padding: 12px 15px;
         font-size: 13px;
+        border-left: none;
+        border-bottom: 2px solid transparent;
+    }
+    
+    .tab-header.active {
+        border-left: none;
+        border-bottom-color: #007AFF;
     }
     
     .panel-content {
@@ -255,7 +545,6 @@ textarea {
     }
     
     .imagen-section {
-        flex-direction: column;
         gap: 15px;
     }
     
@@ -266,5 +555,9 @@ textarea {
     
     .upload-area {
         padding: 20px;
+    }
+    
+    .plantillas-grid {
+        grid-template-columns: 1fr;
     }
 }

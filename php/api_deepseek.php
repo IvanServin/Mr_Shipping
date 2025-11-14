@@ -4,101 +4,76 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-echo "<div style='padding:20px; background:#f8f9fa; border-radius:10px; margin:20px;'>";
-echo "<h2>🔧 Debug - Proceso de IA</h2>";
-
-// Mostrar todo lo que llega por POST
-echo "<h3>📨 Datos POST recibidos:</h3>";
-echo "<pre>";
-print_r($_POST);
-echo "</pre>";
-
 // Recibir instrucción del usuario
 $instruccion_usuario = $_POST['instruccion'] ?? '';
 
-echo "<h3>👤 Instrucción del usuario:</h3>";
-echo "<p style='background:white; padding:10px; border-radius:5px;'><strong>" . htmlspecialchars($instruccion_usuario) . "</strong></p>";
-
 if (empty($instruccion_usuario)) {
-    echo "<p style='color: red;'>❌ Error: No se recibió instrucción.</p>";
-    echo "<br><a href='index.php?modulo=asistente_perfil' style='background:#007bff; color:white; padding:10px 20px; text-decoration:none; border-radius:5px;'>← Volver al Asistente</a>";
-    echo "</div>";
+    $_SESSION['error'] = "No se recibió instrucción.";
+    header('Location: index.php?modulo=asistente_perfil');
     exit;
 }
 
-// CONEXIÓN A LA BASE DE DATOS Y OBTENCIÓN DEL CSS DEL PERFIL
+// CONEXIÓN A LA BASE DE DATOS Y OBTENCIÓN DEL CSS Y HTML DEL PERFIL
 $estilos_actuales = '';
+$html_actual = '';
 $id_usuario = $_SESSION['id_usuario'] ?? null;
 
 if ($id_usuario) {
     try {
-        // Usar tu conexión existente
         include_once __DIR__ . '/../conexion/conexion.php';
+        include_once __DIR__ . '/../includes/funciones_estilos.php';
         $con = conectar();
         
-        // Obtener la ruta del CSS personalizado del perfil
-        $sql = "SELECT css_personalizado FROM perfil WHERE id_usuario = ?";
-        $stmt = $con->prepare($sql);
-        $stmt->bind_param("i", $id_usuario);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $perfil = $result->fetch_assoc();
+        //Cargar desde la tabla 'perfil' (plantilla activa actual)
+        $query_perfil = "SELECT css_personalizado, html_personalizado FROM perfil WHERE id_usuario = ?";
+        $stmt_perfil = $con->prepare($query_perfil);
+        $stmt_perfil->bind_param("i", $id_usuario);
+        $stmt_perfil->execute();
+        $result_perfil = $stmt_perfil->get_result();
         
-        if ($perfil && !empty($perfil['css_personalizado'])) {
-            $ruta_css = $perfil['css_personalizado'];
+        if ($result_perfil && $result_perfil->num_rows > 0) {
+            $perfil = $result_perfil->fetch_assoc();
+            $css_personalizado = $perfil['css_personalizado'];
+            $html_personalizado = $perfil['html_personalizado'];
             
-            // Verificar si el archivo existe
-            if (file_exists($ruta_css)) {
-                $estilos_actuales = file_get_contents($ruta_css);
-                echo "<p style='color: green;'>✅ CSS cargado desde: " . htmlspecialchars($ruta_css) . "</p>";
-            } else {
-                // Si el archivo no existe, cargar el CSS por defecto
-                $ruta_default = 'estilos/estilos_perfil.css';
-                if (file_exists($ruta_default)) {
-                    $estilos_actuales = file_get_contents($ruta_default);
-                    echo "<p style='color: orange;'>⚠️ Archivo personalizado no encontrado. Cargando CSS por defecto: " . htmlspecialchars($ruta_default) . "</p>";
-                } else {
-                    echo "<p style='color: red;'>❌ Error: No se pudo cargar ningún archivo CSS.</p>";
-                    $estilos_actuales = '/* Error: No se pudo cargar CSS */';
-                }
+            // OBTENER CSS
+            if (!empty($css_personalizado) && file_exists($css_personalizado)) {
+                $estilos_actuales = file_get_contents($css_personalizado);
             }
-        } else {
-            // Si no hay CSS personalizado, cargar el por defecto
+        }
+        
+        // Si no hay CSS personalizado, cargar por defecto
+        if (empty($estilos_actuales)) {
             $ruta_default = 'estilos/estilos_perfil.css';
             if (file_exists($ruta_default)) {
                 $estilos_actuales = file_get_contents($ruta_default);
-                echo "<p style='color: blue;'>ℹ️ Cargando CSS por defecto: " . htmlspecialchars($ruta_default) . "</p>";
-            } else {
-                echo "<p style='color: red;'>❌ Error: No se pudo cargar el CSS por defecto.</p>";
-                $estilos_actuales = '/* Error: No se pudo cargar CSS */';
             }
         }
+        
+        // Si no hay HTML personalizado, cargar estructura base
+        if (empty($html_actual)) {
+            $html_actual = obtenerEstructuraBasePerfil();
+        }
+        
     } catch (Exception $e) {
-        echo "<p style='color: red;'>❌ Error al obtener CSS de la base de datos: " . htmlspecialchars($e->getMessage()) . "</p>";
-        // Intentar cargar CSS por defecto como fallback
+        // Fallback a valores por defecto
         $ruta_default = 'estilos/estilos_perfil.css';
         if (file_exists($ruta_default)) {
             $estilos_actuales = file_get_contents($ruta_default);
-        } else {
-            $estilos_actuales = '/* Error: No se pudo cargar CSS */';
         }
+        $html_actual = obtenerEstructuraBasePerfil();
     }
 } else {
-    echo "<p style='color: red;'>❌ No se pudo identificar al usuario.</p>";
     // Cargar CSS por defecto
     $ruta_default = 'estilos/estilos_perfil.css';
     if (file_exists($ruta_default)) {
         $estilos_actuales = file_get_contents($ruta_default);
-    } else {
-        $estilos_actuales = '/* Error: No se pudo cargar CSS */';
     }
+    $html_actual = obtenerEstructuraBasePerfil();
 }
 
-echo "<h3>🎨 CSS que se enviará a la IA:</h3>";
-echo "<pre style='background:white; padding:15px; border-radius:5px; max-height:300px; overflow:auto;'>" . htmlspecialchars($estilos_actuales) . "</pre>";
-
 // Tu API key de DeepSeek
-$apiKey = "aca va la ApiKey";
+$apiKey = "sk-67fc2035b3b144b39d8324a66f463b54";
 
 // Data para DeepSeek
 $data = [
@@ -106,19 +81,14 @@ $data = [
     "messages" => [
         [
             "role" => "user",
-            "content" => "Eres un asistente especializado en CSS. Analiza el siguiente CSS y aplica esta instrucción: '" . $instruccion_usuario . "'\n\nCSS actual:\n" . $estilos_actuales . "\n\nIMPORTANTE: Responde ÚNICAMENTE con el código CSS completo y modificado, sin explicaciones, sin comentarios adicionales, sin texto introductorio, solo el código CSS tampoco cambies propiedades como hidden o cosas que afecten la visivilidad, tambien ten cuidado en que los botones de navegacion sean siempre visibles."
+            "content" => "Eres un asistente especializado en CSS y HTML. Analiza el siguiente CSS y HTML de un perfil y aplica esta instrucción: '" . $instruccion_usuario . "'\n\nESTRUCTURA HTML ACTUAL:\n" . $html_actual . "\n\nCSS ACTUAL:\n" . $estilos_actuales . "\n\nIMPORTANTE: \n1. Responde ÚNICAMENTE con un JSON que tenga dos campos: 'css' y 'html'\n2. El campo 'css' debe contener el código CSS completo y modificado\n3. El campo 'html' debe contener la estructura HTML completa y modificada\n4. Mantén TODA la funcionalidad existente incluyendo:\n   - Formulario de cerrar sesión con method='POST'\n   - Botones de navegación funcionales\n   - Placeholders {foto_perfil}, {foto_portada}, {nombre_usuario}, {biografia}, {productos}\n5. Conserva las clases principales como 'cabecera', 'cont_img', 'datos_us', 'cont_nav_perfil', 'cont_productos'\n6. NO elimines elementos funcionales como el menú de configuración\n7. El HTML debe ser válido y mantener la estructura básica\n8. En el CSS, no cambies propiedades que afecten la funcionalidad\n9. Asegúrate de que los botones de navegación sean siempre visibles\n10. NO uses markdown ni bloques de código, responde SOLO con el JSON\n11. MANTÉN los placeholders: {foto_perfil}, {foto_portada}, {nombre_usuario}, {biografia}, {productos}\n12. MANTÉN el formulario de cerrar sesión EXACTAMENTE como está: <form action='' method='POST'><button type='submit' class='btn-cerrar-sesion'>Cerrar Sesión</button></form>",
         ]
     ],
-    "max_tokens" => 2000,
+    "max_tokens" => 8000,
     "temperature" => 0.4,
 ];
 
-echo "<h3>📤 Datos enviados a DeepSeek:</h3>";
-echo "<pre style='background:white; padding:15px; border-radius:5px;'>" . htmlspecialchars(json_encode($data, JSON_PRETTY_PRINT)) . "</pre>";
-
-// CURL - CONFIGURACIÓN MEJORADA
-echo "<h3>🔄 Conectando con DeepSeek API...</h3>";
-
+// CURL
 $ch = curl_init("https://api.deepseek.com/chat/completions");
 curl_setopt_array($ch, [
     CURLOPT_HTTPHEADER => [
@@ -128,7 +98,7 @@ curl_setopt_array($ch, [
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_POST => true,
     CURLOPT_POSTFIELDS => json_encode($data),
-    CURLOPT_TIMEOUT => 1000, // Aumentado
+    CURLOPT_TIMEOUT => 1000,
     CURLOPT_CONNECTTIMEOUT => 10,
     CURLOPT_SSL_VERIFYPEER => true,
     CURLOPT_USERAGENT => 'Mozilla/5.0 (compatible; PHP Script)',
@@ -142,62 +112,84 @@ $curl_error = curl_error($ch);
 if ($response === false) {
     $error_msg = curl_error($ch);
     curl_close($ch);
-    echo "<p style='color: red;'>❌ CURL ERROR: " . htmlspecialchars($error_msg) . "</p>";
-    echo "<p style='color: orange;'>💡 Consejo: La API está tardando demasiado. Intenta con una instrucción más simple o intenta más tarde.</p>";
-    echo "<br><a href='index.php?modulo=asistente_perfil' style='background:#007bff; color:white; padding:10px 20px; text-decoration:none; border-radius:5px;'>← Volver al Asistente</a>";
-    echo "</div>";
+    $_SESSION['error'] = "Error de conexión con la IA: " . $error_msg;
+    header('Location: index.php?modulo=asistente_perfil');
     exit;
 }
 
 curl_close($ch);
 
-// Verificar código HTTP
-if ($http_code !== 200) {
-    echo "<p style='color: red;'>❌ HTTP ERROR: Código " . $http_code . "</p>";
-}
-
-echo "<h3>📥 Respuesta cruda de DeepSeek:</h3>";
-echo "<pre style='background:white; padding:15px; border-radius:5px; max-height:300px; overflow:auto;'>" . htmlspecialchars($response) . "</pre>";
-
 $result = json_decode($response, true);
-
-echo "<h2>🤖 Respuesta de la IA:</h2>";
 
 if (isset($result["choices"][0]["message"]["content"])) {
     $respuesta_ia = $result["choices"][0]["message"]["content"];
     
-    // Limpiar la respuesta - asegurarse de que solo tenga CSS
-    $respuesta_ia = preg_replace('/```css\s*/', '', $respuesta_ia);
-    $respuesta_ia = preg_replace('/```\s*/', '', $respuesta_ia);
-    $respuesta_ia = trim($respuesta_ia);
+    // CORRECCIÓN: Extraer el JSON del bloque de código markdown si existe
+    if (preg_match('/```json\s*(.*?)\s*```/s', $respuesta_ia, $matches)) {
+        $json_content = $matches[1];
+    } else {
+        $json_content = $respuesta_ia;
+    }
     
-    echo "<pre style='background:#e8f5e8; padding:15px; border-radius:5px; border:2px solid #4CAF50; max-height:400px; overflow:auto;'>" . htmlspecialchars($respuesta_ia) . "</pre>";
+    // Intentar parsear como JSON
+    $json_data = json_decode($json_content, true);
     
-    // Guardar en sesión
-    $_SESSION['css_ia'] = $respuesta_ia;
-    echo "<p style='color: green; font-weight:bold;'>✅ Respuesta guardada en sesión</p>";
-    
-    // Mostrar botón para guardar el CSS
-    echo "<br><a href='index.php?modulo=aplicar_estilos' style='background:#28a745; color:white; padding:10px 20px; text-decoration:none; border-radius:5px; margin-right:10px;'>💾 Guardar CSS en mi perfil</a>";
+    if ($json_data && isset($json_data['css']) && isset($json_data['html'])) {
+        $css_modificado = $json_data['css'];
+        $html_modificado = $json_data['html'];
+        
+        // Guardar en SESIÓN y redirigir para procesamiento
+        $_SESSION['css_ia'] = $css_modificado;
+        $_SESSION['html_ia'] = $html_modificado;
+        $_SESSION['instruccion_ia'] = $instruccion_usuario;
+        
+        // Redirigir a aplicar_estilos para procesamiento completo
+        header('Location: index.php?modulo=aplicar_estilos');
+        exit;
+        
+    } else {
+        // Fallback: si no viene en JSON, tratar de separar CSS y HTML
+        // Buscar código CSS (entre ```css o en el contenido)
+        if (preg_match('/```css\s*(.*?)\s*```/s', $respuesta_ia, $matches)) {
+            $css_modificado = $matches[1];
+        } else if (preg_match('/```\s*(.*?)\s*```/s', $respuesta_ia, $matches)) {
+            // Si no hay marcado específico de CSS, usar el primer bloque de código
+            $css_modificado = $matches[1];
+        } else {
+            $css_modificado = $respuesta_ia;
+        }
+        
+        // Buscar código HTML (entre ```html o con etiquetas)
+        if (preg_match('/```html\s*(.*?)\s*```/s', $respuesta_ia, $matches)) {
+            $html_modificado = $matches[1];
+        } else if (preg_match('/<div class="cabecera".*?<\/div>.*?<nav.*?<\/nav>.*?<div class="cont_productos".*?<\/div>/s', $respuesta_ia, $matches)) {
+            $html_modificado = $matches[0];
+        } else {
+            // Si no se encuentra HTML, mantener el original
+            $html_modificado = $html_actual;
+        }
+        
+        // Limpiar el CSS de marcadores
+        $css_modificado = preg_replace('/```css|```|```json/', '', $css_modificado);
+        $css_modificado = trim($css_modificado);
+        
+        // Limpiar el HTML de marcadores
+        $html_modificado = preg_replace('/```html|```|```json/', '', $html_modificado);
+        $html_modificado = trim($html_modificado);
+        
+        //Guardar en SESIÓN y redirigir
+        $_SESSION['css_ia'] = $css_modificado;
+        $_SESSION['html_ia'] = $html_modificado;
+        $_SESSION['instruccion_ia'] = $instruccion_usuario;
+        
+        // Redirigir a aplicar_estilos para procesamiento completo
+        header('Location: index.php?modulo=aplicar_estilos');
+        exit;
+    }
     
 } else {
-    echo "<p style='color: red;'>❌ La IA no devolvió código.</p>";
-    echo "<h4>Debug respuesta completa:</h4>";
-    echo "<pre style='background:#ffe6e6; padding:15px; border-radius:5px;'>" . print_r($result, true) . "</pre>";
+    $_SESSION['error'] = "La IA no devolvió una respuesta válida.";
+    header('Location: index.php?modulo=asistente_perfil');
+    exit;
 }
-
-echo "<br><br>";
-echo "<a href='index.php?modulo=asistente_perfil' style='background:#007bff; color:white; padding:10px 20px; text-decoration:none; border-radius:5px; margin-right:10px;'>← Volver al Asistente</a>";
-  ?><?php if(isset($_SESSION['css_ia'])): ?>
-        <div style="margin-top:20px; padding:15px; background:#e8f5e8; border:2px solid #4CAF50; border-radius:5px;">
-            <h4>✅ Vista Previa Generada</h4>
-            <p>Se creó una vista previa con tus cambios. Revísala antes de aplicar.</p>
-            <a href="index.php?modulo=perfil_preview" style="background:#4CAF50; color:white; padding:10px 20px; text-decoration:none; border-radius:5px; display:inline-block; margin-top:10px;">
-                👀 Ver Vista Previa
-            </a>
-        </div>
-    ?>   
-    <?php endif; ?><?php
-echo "<a href='index.php?modulo=perfil' style='background:#6c757d; color:white; padding:10px 20px; text-decoration:none; border-radius:5px;'>Ver Perfil →</a>";
-
-echo "</div>";
+?>

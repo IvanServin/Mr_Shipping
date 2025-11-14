@@ -7,10 +7,11 @@ ini_set('display_errors', 1);
 include_once __DIR__ . '/conexion/conexion.php';
 $con = conectar(); // Asignar a variable
 
-// Cargar CSS personalizado desde BD si el usuario está logueado
+// Cargar CSS y HTML personalizado desde BD si el usuario está logueado
 $css_personalizado = '';
+$html_personalizado = '';
 if (isset($_SESSION['id_usuario']) && $con) {
-    $query = "SELECT css_personalizado FROM perfil WHERE id_usuario = ?";
+    $query = "SELECT css_personalizado, html_personalizado FROM perfil WHERE id_usuario = ?";
     $stmt = $con->prepare($query);
     $stmt->bind_param("i", $_SESSION['id_usuario']);
     $stmt->execute();
@@ -18,6 +19,7 @@ if (isset($_SESSION['id_usuario']) && $con) {
     
     if ($row = $result->fetch_assoc()) {
         $css_personalizado = $row['css_personalizado'];
+        $html_personalizado = $row['html_personalizado'];
     }
 }
 
@@ -31,10 +33,10 @@ if (isset($_SESSION['id_usuario']) && $con) {
     <link rel="stylesheet" href="estilos/estilos_vista_productos.css">
     <link rel="stylesheet" href="estilos/estilos_pd.css">
     <link rel="stylesheet" href="estilos/estilos_editar_perfil.css">
-    <!-- SIEMPRE cargar el CSS base -->
-    <!--<link rel="stylesheet" href="estilos/estilos_perfil.css">-->
+    <!-- SIEMPRE cargar el CSS base del perfil -->
+    <link rel="stylesheet" href="estilos/estilos_perfil.css">
     
-    <!-- Cargar personalizado si existe -->
+    <!-- Cargar CSS personalizado si existe -->
     <?php if (!empty($css_personalizado) && file_exists("{$css_personalizado}")): ?>
     <link rel="stylesheet" href="<?php echo $css_personalizado; ?>?version=<?php echo time(); ?>">
     <?php endif; ?>
@@ -46,6 +48,8 @@ if (isset($_SESSION['id_usuario']) && $con) {
     <?php
     $modulo = isset($_GET['modulo']) ? $_GET['modulo'] : '';
     echo "<!-- DEBUG: Módulo = '$modulo' -->";
+    echo "<!-- DEBUG: CSS personalizado = '$css_personalizado' -->";
+    echo "<!-- DEBUG: HTML personalizado = '$html_personalizado' -->";
     
     if ($modulo !== 'perfil') {
         include('php/header.php');
@@ -62,8 +66,33 @@ if (isset($_SESSION['id_usuario']) && $con) {
             echo "<!-- DEBUG: Intentando incluir: $ruta_archivo -->";
             
             if (file_exists($ruta_archivo)) {
-                include($ruta_archivo);
-                echo "<!-- DEBUG: Archivo incluido -->";
+                // Si es el módulo perfil, usar el sistema dinámico
+                if ($pagina === 'perfil') {
+                    // Si hay HTML personalizado y el archivo existe, incluirlo
+                    if (!empty($html_personalizado) && file_exists($html_personalizado)) {
+                        try {
+                            include($html_personalizado);
+                            echo "<!-- DEBUG: HTML personalizado incluido desde: $html_personalizado -->";
+                        } catch (Exception $e) {
+                            echo "<!-- DEBUG: ERROR al incluir HTML personalizado: " . $e->getMessage() . " -->";
+                            echo "<div style='background:#f8d7da; color:#721c24; padding:10px; margin:10px; border-radius:5px; text-align:center;'>Error al cargar el perfil personalizado. Cargando perfil base.</div>";
+                            include('php/perfil_base.php');
+                            echo "<!-- DEBUG: Perfil base incluido por error -->";
+                        }
+                    } else {
+                        // Si no hay HTML personalizado, usar el perfil base
+                        if (empty($html_personalizado)) {
+                            echo "<!-- DEBUG: No hay HTML personalizado en BD -->";
+                        } else {
+                            echo "<!-- DEBUG: Archivo HTML personalizado no encontrado: $html_personalizado -->";
+                        }
+                        include('php/perfil_base.php');
+                        echo "<!-- DEBUG: Perfil base incluido -->";
+                    }
+                } else {
+                    include($ruta_archivo);
+                    echo "<!-- DEBUG: Archivo incluido -->";
+                }
             } else {
                 echo "<!-- DEBUG: Archivo NO existe: $ruta_archivo -->";
                 include('php/mostrar_productos.php');
